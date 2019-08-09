@@ -1,17 +1,22 @@
 import React from "react";
-import { StyleSheet, Text, View, Button } from "react-native";
+import { StyleSheet, Text, View, Button, Image } from "react-native";
 
 export default class MainScreen extends React.Component {
   static navigationOptions = {
-    title: "Welcome"
+    title: "Main"
   };
   render() {
     const { navigate } = this.props.navigation;
-    console.log("Hello");
     return (
       <View style={styles.container}>
+        <Image
+          source={require('../assets/images/hg0.png')}
+        />
         <Text>Welcome to Hangman</Text>
-        <Button title="Login" />
+        <Button 
+          title="Login"
+          onPress={()=> navigate("Login")}
+         />
       </View>
     );
   }

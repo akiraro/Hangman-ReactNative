@@ -1,40 +1,23 @@
-import { AppLoading } from "expo";
-import { Asset } from "expo-asset";
-import * as Font from "expo-font";
-import React, { useState } from "react";
-import { Platform, StatusBar, StyleSheet, View, Text } from "react-native";
-import { Ionicons } from "@expo/vector-icons";
+import { StyleSheet } from "react-native";
 import { createStackNavigator, createAppContainer } from "react-navigation";
 
-import AppNavigator from "./navigation/AppNavigator";
 import MainScreen from "./screens/MainScreen";
-
-// export default function App(props) {
-//   const [isLoadingComplete, setLoadingComplete] = useState(false);
-//   if (!isLoadingComplete && !props.skipLoadingScreen) {
-//     return (
-//       <AppLoading
-//         startAsync={loadResourcesAsync}
-//         onError={handleLoadingError}
-//         onFinish={() => handleFinishLoading(setLoadingComplete)}
-//       />
-//     );
-//   } else {
-//     return (
-//       <View style={styles.container}>
-//         {Platform.OS === "ios" && <StatusBar barStyle="default" />}
-//         <AppNavigator />
-//       </View>
-//     );
-//   }
-// }
+import LoginScreen from "./screens/Auth/LoginScreen";
+import SignupScreen from "./screens/Auth/SignupScreen";
+import GameScreen from "./screens/Hangman/GameScreen";
+import TabNavigator from "./navigators/BottomTabNavigator";
 
 const MainNavigator = createStackNavigator(
   {
-    Home: { screen: MainScreen }
+    Home: { screen: MainScreen },
+    Login: { screen: LoginScreen },
+    Signup: { screen: SignupScreen },
+    Game: { screen: GameScreen },
+    User: { screen: TabNavigator }
   },
   {
-    initialRouteName: "Home"
+    initialRouteName: "User",
+    headerMode: "none"
   }
 );
 
