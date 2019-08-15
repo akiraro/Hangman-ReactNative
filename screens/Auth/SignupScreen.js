@@ -1,6 +1,5 @@
 import React, { Component } from "react";
 import { Text, View, StyleSheet, Dimensions, Alert } from "react-native";
-import Icon from "react-native-vector-icons/FontAwesome";
 import { Input, Button } from "react-native-elements";
 import { signUp } from "../../controllers/auth";
 

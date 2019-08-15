@@ -1,22 +1,22 @@
 import { StyleSheet } from "react-native";
 import { createStackNavigator, createAppContainer } from "react-navigation";
 
-import MainScreen from "./screens/MainScreen";
 import LoginScreen from "./screens/Auth/LoginScreen";
 import SignupScreen from "./screens/Auth/SignupScreen";
 import GameScreen from "./screens/Hangman/GameScreen";
 import TabNavigator from "./navigators/BottomTabNavigator";
+import ShowScreen from "./screens/Hangman/ShowScreen";
 
 const MainNavigator = createStackNavigator(
   {
-    Home: { screen: MainScreen },
     Login: { screen: LoginScreen },
     Signup: { screen: SignupScreen },
     Game: { screen: GameScreen },
-    User: { screen: TabNavigator }
+    User: { screen: TabNavigator },
+    Show: { screen: ShowScreen }
   },
   {
-    initialRouteName: "User",
+    initialRouteName: "Login",
     headerMode: "none"
   }
 );

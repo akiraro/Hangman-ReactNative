@@ -1,5 +1,12 @@
 import React, { Component } from "react";
-import { Text, View, StyleSheet, Dimensions, Alert } from "react-native";
+import {
+  Text,
+  View,
+  StyleSheet,
+  Dimensions,
+  Alert,
+  AsyncStorage
+} from "react-native";
 import { Input, Button } from "react-native-elements";
 import { signIn } from "../../controllers/auth";
 
@@ -12,8 +19,8 @@ export class LoginScreen extends Component {
       buttonType: "outline",
       isButtonLoading: false,
       isButtonEnabled: false,
-      userEmail: "",
-      userPassword: "",
+      userEmail: "test@gmail.com",
+      userPassword: "test",
       error: {
         email: "",
         password: ""
@@ -21,7 +28,7 @@ export class LoginScreen extends Component {
     };
   }
   static navigationOptions = {
-    title: "Login"
+    header: null
   };
   render() {
     const { navigate } = this.props.navigation;
@@ -76,17 +83,24 @@ export class LoginScreen extends Component {
     );
   }
 
-  loginHandler(res) {
+  loginHandler = async res => {
     const { navigate } = this.props.navigation;
+
     if (res.status == "SUCCESS") {
+      try {
+        await AsyncStorage.setItem("token", res.data.remember_token);
+      } catch (error) {
+        console.log(error.message);
+      }
       this.setState({
         isButtonLoading: false,
         buttonType: "outline"
       });
-      navigate("UserScreen");
+      navigate("User");
     } else {
       this.setState({
         isButtonLoading: false,
+        isButtonEnabled: false,
         buttonType: "outline"
       });
       Alert.alert(
@@ -101,7 +115,7 @@ export class LoginScreen extends Component {
         ]
       );
     }
-  }
+  };
 }
 
 const styles = StyleSheet.create({

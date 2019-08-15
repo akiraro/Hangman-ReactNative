@@ -1,6 +1,13 @@
 import React, { Component } from "react";
-import { View, Text, StyleSheet } from "react-native";
-import { Button } from "react-native-elements";
+import {
+  View,
+  ActivityIndicator,
+  StyleSheet,
+  AsyncStorage,
+  Text
+} from "react-native";
+import { Button, PricingCard } from "react-native-elements";
+import { newGame } from "../../controllers/game";
 
 class GameScreen extends Component {
   constructor(props) {
@@ -9,21 +16,108 @@ class GameScreen extends Component {
   }
 
   render() {
-    const { goBack } = this.props.navigation;
+    const { goBack, navigate } = this.props.navigation;
+    console.log("Game screen");
     return (
       <View style={styles.container}>
-        <Text> GameScreen </Text>
-        <Button title="Back" onPress={() => goBack()} />
+        <View style={styles.insider}>
+          <Text
+            style={{ fontSize: 35, fontWeight: "bold", alignSelf: "center" }}
+          >
+            Choose difficulty
+          </Text>
+          <PricingCard
+            color="#4f9deb"
+            title="Easy"
+            price="8-10 letters"
+            button={{ title: "GO FOR EASY !" }}
+            pricingStyle={{ fontSize: 20 }}
+            onButtonPress={() =>
+              getToken().then(token => {
+                newGame(1, token).then(res => {
+                  navigate("Show", {
+                    data: res
+                  });
+                });
+              })
+            }
+          />
+
+          <PricingCard
+            color="#4f9deb"
+            title="Intermediate"
+            price="11-12 letters"
+            button={{ title: "GO FOR INTERMEDIATE !" }}
+            pricingStyle={{ fontSize: 20 }}
+            onButtonPress={() =>
+              getToken().then(token => {
+                newGame(2, token).then(res => {
+                  navigate("Show", {
+                    data: res
+                  });
+                });
+              })
+            }
+          />
+
+          <PricingCard
+            color="#4f9deb"
+            title="Hard"
+            price="More than 12 letters"
+            button={{ title: "GO FOR HARD !" }}
+            pricingStyle={{ fontSize: 20 }}
+            onButtonPress={() =>
+              getToken().then(token => {
+                newGame(3, token).then(res => {
+                  navigate("Show", {
+                    data: res
+                  });
+                });
+              })
+            }
+          />
+          <Button
+            title="Back"
+            onPress={() => {
+              this.props.navigation.state.params.returnData();
+              goBack();
+            }}
+            style={styles.buttonStyle}
+          />
+        </View>
       </View>
     );
   }
 }
 
+const getToken = async () => {
+  let token = "";
+  try {
+    token = await AsyncStorage.getItem("token");
+  } catch (error) {
+    console.log(error);
+  }
+  return token;
+};
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: "center",
-    alignItems: "center"
+    marginTop: 48
+  },
+  insider: {
+    marginLeft: 24,
+    marginRight: 24,
+    marginBottom: 24
+  },
+  buttonStyle: {
+    width: 200,
+    alignSelf: "center"
+  },
+  horizontal: {
+    flexDirection: "row",
+    justifyContent: "space-around",
+    padding: 10
   }
 });
 
