@@ -1,13 +1,8 @@
 import React, { Component } from "react";
-import {
-  View,
-  ActivityIndicator,
-  StyleSheet,
-  AsyncStorage,
-  Text
-} from "react-native";
+import { View, StyleSheet, AsyncStorage, Text } from "react-native";
 import { Button, PricingCard } from "react-native-elements";
 import { newGame } from "../../controllers/game";
+import { getToken } from "../../controllers/token";
 
 class GameScreen extends Component {
   constructor(props) {
@@ -78,10 +73,7 @@ class GameScreen extends Component {
           />
           <Button
             title="Back"
-            onPress={() => {
-              this.props.navigation.state.params.returnData();
-              goBack();
-            }}
+            onPress={() => goBack()}
             style={styles.buttonStyle}
           />
         </View>
@@ -89,16 +81,6 @@ class GameScreen extends Component {
     );
   }
 }
-
-const getToken = async () => {
-  let token = "";
-  try {
-    token = await AsyncStorage.getItem("token");
-  } catch (error) {
-    console.log(error);
-  }
-  return token;
-};
 
 const styles = StyleSheet.create({
   container: {

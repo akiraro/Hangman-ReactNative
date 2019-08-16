@@ -5,12 +5,12 @@ import {
   StyleSheet,
   FlatList,
   Dimensions,
-  AsyncStorage,
   TouchableOpacity
 } from "react-native";
 import TextTile from "../../components/TextTile";
 import { submitKey } from "../../controllers/game";
 import { Button } from "react-native-elements";
+import { getToken } from "../../controllers/token";
 
 export class ShowScreen extends Component {
   constructor(props) {
@@ -29,8 +29,11 @@ export class ShowScreen extends Component {
   }
 
   renderItem = ({ item, _ }) => {
-    if (this.state.data.game.chances == 0) {
-      return;
+    if (
+      this.state.data.game.chances == 0 ||
+      !this.state.data.game.pinpoint.includes("*")
+    ) {
+      return; // Return empty components when the game ended
     }
     if (this.state.data.game.guesses.includes(item.key.toLowerCase())) {
       return (
@@ -73,8 +76,7 @@ export class ShowScreen extends Component {
   };
 
   render() {
-    console.log(this.state.data);
-    const { goBack } = this.props.navigation;
+    const { navigate } = this.props.navigation;
     return (
       <View
         style={
@@ -107,8 +109,7 @@ export class ShowScreen extends Component {
           }}
           title="Back"
           onPress={() => {
-            this.props.navigation.state.params.returnData();
-            goBack();
+            navigate("Home");
           }}
         />
       </View>
@@ -116,7 +117,10 @@ export class ShowScreen extends Component {
   }
 
   renderFlatList() {
-    if (this.state.data.game.chances == 0) {
+    if (
+      this.state.data.game.chances == 0 ||
+      !this.state.data.game.pinpoint.includes("*")
+    ) {
       return (
         <View>
           <Text style={styles.textTitleStyle}>Game Ended</Text>
@@ -146,16 +150,6 @@ export class ShowScreen extends Component {
     }
     return data;
   }
-
-  getToken = async () => {
-    let token = "";
-    try {
-      token = await AsyncStorage.getItem("token");
-    } catch (error) {
-      console.log(error);
-    }
-    return token;
-  };
 }
 
 const styles = StyleSheet.create({

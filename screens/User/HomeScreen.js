@@ -3,7 +3,6 @@ import {
   View,
   Text,
   StyleSheet,
-  AsyncStorage,
   ActivityIndicator,
   ScrollView,
   Dimensions
@@ -12,16 +11,33 @@ import { Button } from "react-native-elements";
 import { ListItem } from "react-native-elements";
 import Icon from "react-native-vector-icons/FontAwesome";
 import { getHistory, getData } from "../../controllers/game";
+import BottomDrawer from "rn-bottom-drawer";
+import { signOut, getUser } from "../../controllers/auth";
+import { StackActions, NavigationActions } from "react-navigation";
+import { getToken } from "../../controllers/token";
 
 let list = [];
+let height = Dimensions.get("window").height;
 
 class HomeScreen extends Component {
+  componentDidMount() {
+    // This will refresh the list when the focus of screen changes
+    const { navigation } = this.props;
+    this.focusListener = navigation.addListener("didFocus", () => {
+      this.refreshList();
+    });
+  }
+  componentWillUnmount() {
+    this.focusListener.remove();
+  }
+
   constructor(props) {
     super(props);
     this.state = {
       isLoading: true,
       token: "",
-      refreshList: true
+      refreshList: true,
+      user: ""
     };
 
     getToken().then(token => {
@@ -29,15 +45,19 @@ class HomeScreen extends Component {
         token: token,
         isLoading: false
       });
+      getUser(token).then(user => {
+        this.setState({ user: user.user });
+      });
       getHistory(token).then(res => {
         list = [];
         res.reverse().map((data, i) => {
+          let status = data.chances == 0 || !data.pinpoint.includes("*");
           list.push({
             name: data.pinpoint,
             avatar_url: <Icon name="gamepad" size={30} color="#84868a" />,
             badge: {
-              value: data.chances == 0 ? "Done" : "On Going",
-              status: data.chances == 0 ? "success" : "error"
+              value: status ? "Done" : "On Going",
+              status: status ? "success" : "error"
             },
             session: data,
             subtitle:
@@ -85,8 +105,7 @@ class HomeScreen extends Component {
                       data: {
                         game: l.session,
                         data: res
-                      },
-                      returnData: this.refreshList.bind(this)
+                      }
                     });
                     console.log(res);
                   });
@@ -95,13 +114,37 @@ class HomeScreen extends Component {
             ))}
           </ScrollView>
 
-          <Button
-            style={styles.buttonStyle}
-            title="New Game"
-            onPress={() =>
-              navigate("Game", { returnData: this.refreshList.bind(this) })
-            }
-          />
+          {/* Bottom Drawer Component */}
+          <BottomDrawer
+            containerHeight={height * 0.25}
+            downDisplay={(height * 0.25) / 1.5}
+            startUp={false}
+          >
+            <Text style={styles.textBottomDrawerTitle}>Swipe Here</Text>
+            <Text style={styles.textBottomDrawer}>{this.state.user.email}</Text>
+            <Button
+              style={styles.buttonStyle}
+              title="New Game"
+              onPress={() => navigate("Game")}
+            />
+            <Button
+              style={styles.buttonStyle}
+              title="Logout"
+              onPress={() =>
+                signOut(this.state.token).then(res => {
+                  if (res.status == "SUCCESS") {
+                    const resetAction = StackActions.reset({
+                      index: 0,
+                      actions: [
+                        NavigationActions.navigate({ routeName: "Login" })
+                      ]
+                    });
+                    this.props.navigation.dispatch(resetAction);
+                  }
+                })
+              }
+            />
+          </BottomDrawer>
         </View>
       );
     }
@@ -111,12 +154,13 @@ class HomeScreen extends Component {
     getHistory(this.state.token).then(res => {
       list = [];
       res.reverse().map((data, i) => {
+        let status = data.chances == 0 || !data.pinpoint.includes("*");
         list.push({
           name: data.pinpoint,
           avatar_url: <Icon name="gamepad" size={30} color="#84868a" />,
           badge: {
-            value: data.chances == 0 ? "Done" : "On Going",
-            status: data.chances == 0 ? "success" : "error"
+            value: status ? "Done" : "On Going",
+            status: status ? "success" : "error"
           },
           session: data,
           subtitle:
@@ -132,16 +176,6 @@ class HomeScreen extends Component {
     });
   }
 }
-
-const getToken = async () => {
-  let token = "";
-  try {
-    token = await AsyncStorage.getItem("token");
-  } catch (error) {
-    console.log(error);
-  }
-  return token;
-};
 
 const styles = StyleSheet.create({
   container: {
@@ -165,6 +199,21 @@ const styles = StyleSheet.create({
     width: Dimensions.get("window").width / 3,
     alignSelf: "center",
     margin: 5
+  },
+  textBottomDrawerTitle: {
+    alignSelf: "center",
+    marginBottom: 40,
+    marginTop: 5,
+    fontSize: 20,
+    fontWeight: "bold",
+    color: "#d4d4d4"
+  },
+  textBottomDrawer: {
+    alignSelf: "center",
+    marginBottom: 5,
+    fontSize: 20,
+    fontWeight: "bold",
+    color: "#d4d4d4"
   }
 });
 

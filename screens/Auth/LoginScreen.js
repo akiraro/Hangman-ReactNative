@@ -5,7 +5,8 @@ import {
   StyleSheet,
   Dimensions,
   Alert,
-  AsyncStorage
+  AsyncStorage,
+  Image
 } from "react-native";
 import { Input, Button } from "react-native-elements";
 import { signIn } from "../../controllers/auth";
@@ -34,6 +35,10 @@ export class LoginScreen extends Component {
     const { navigate } = this.props.navigation;
     return (
       <View style={styles.container}>
+        <Image
+          source={require("../../assets/images/Hangman-6.png")}
+          style={{ marginBottom: 15, width: 100, height: 155 }}
+        />
         <View style={styles.loginContainer}>
           <Input
             placeholder="E-mail"
@@ -96,7 +101,7 @@ export class LoginScreen extends Component {
         isButtonLoading: false,
         buttonType: "outline"
       });
-      navigate("User");
+      navigate("Home");
     } else {
       this.setState({
         isButtonLoading: false,

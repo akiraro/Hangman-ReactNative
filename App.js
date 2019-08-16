@@ -4,19 +4,21 @@ import { createStackNavigator, createAppContainer } from "react-navigation";
 import LoginScreen from "./screens/Auth/LoginScreen";
 import SignupScreen from "./screens/Auth/SignupScreen";
 import GameScreen from "./screens/Hangman/GameScreen";
-import TabNavigator from "./navigators/BottomTabNavigator";
 import ShowScreen from "./screens/Hangman/ShowScreen";
+import HomeScreen from "./screens/User/HomeScreen";
+import SplashScreen from "./screens/SplashScreen";
 
 const MainNavigator = createStackNavigator(
   {
     Login: { screen: LoginScreen },
     Signup: { screen: SignupScreen },
     Game: { screen: GameScreen },
-    User: { screen: TabNavigator },
-    Show: { screen: ShowScreen }
+    Show: { screen: ShowScreen },
+    Home: { screen: HomeScreen },
+    Splash: { screen: SplashScreen }
   },
   {
-    initialRouteName: "Login",
+    initialRouteName: "Splash",
     headerMode: "none"
   }
 );

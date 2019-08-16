@@ -69,7 +69,6 @@ export const signOut = async token => {
 
 export const getUser = async token => {
   console.log("Get User");
-  console.log(token);
   let response = "";
   await fetch("http://localhost:3000/auth/getUser", {
     method: "GET",
