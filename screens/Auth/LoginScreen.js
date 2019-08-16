@@ -35,6 +35,7 @@ export class LoginScreen extends Component {
     const { navigate } = this.props.navigation;
     return (
       <View style={styles.container}>
+        <Text style={styles.textTitle}> HANGMAN </Text>
         <Image
           source={require("../../assets/images/Hangman-6.png")}
           style={{ marginBottom: 15, width: 100, height: 155 }}
@@ -140,6 +141,11 @@ const styles = StyleSheet.create({
   },
   signupText: {
     paddingTop: 5
+  },
+  textTitle: {
+    marginBottom: 10,
+    fontWeight: "bold",
+    fontSize: 30
   }
 });
 

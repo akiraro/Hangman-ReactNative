@@ -18,8 +18,7 @@ const MainNavigator = createStackNavigator(
     Splash: { screen: SplashScreen }
   },
   {
-    initialRouteName: "Splash",
-    headerMode: "none"
+    initialRouteName: "Splash"
   }
 );
 

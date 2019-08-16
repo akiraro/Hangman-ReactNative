@@ -23,7 +23,7 @@ export class SignupScreen extends Component {
     };
   }
   static navigationOptions = {
-    title: "Login"
+    title: "Register"
   };
   render() {
     const { navigate } = this.props.navigation;
@@ -110,7 +110,7 @@ export class SignupScreen extends Component {
         isButtonLoading: false,
         buttonType: "outline"
       });
-      Alert.alert("SignUp Succeed", "Great", [
+      Alert.alert("Successfully registered", "Great", [
         {
           text: "Ok",
           onPress: () => console.log("Cancel Pressed"),

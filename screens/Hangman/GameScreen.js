@@ -10,6 +10,10 @@ class GameScreen extends Component {
     this.state = {};
   }
 
+  static navigationOptions = {
+    header: null
+  };
+
   render() {
     const { goBack, navigate } = this.props.navigation;
     console.log("Game screen");

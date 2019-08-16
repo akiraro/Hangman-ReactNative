@@ -40,7 +40,6 @@ export const submitKey = async (key, token, id) => {
     .then(response => response.json())
     .then(responseJson => {
       response = responseJson.game;
-      console.log(response);
     });
   return response;
 };

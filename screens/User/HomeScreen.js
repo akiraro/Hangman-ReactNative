@@ -20,6 +20,10 @@ let list = [];
 let height = Dimensions.get("window").height;
 
 class HomeScreen extends Component {
+  static navigationOptions = {
+    header: null
+  };
+
   componentDidMount() {
     // This will refresh the list when the focus of screen changes
     const { navigation } = this.props;
@@ -28,6 +32,7 @@ class HomeScreen extends Component {
     });
   }
   componentWillUnmount() {
+    // Remove listener
     this.focusListener.remove();
   }
 
@@ -45,9 +50,11 @@ class HomeScreen extends Component {
         token: token,
         isLoading: false
       });
+      // Get user data based on token
       getUser(token).then(user => {
         this.setState({ user: user.user });
       });
+      // Get game history of a user
       getHistory(token).then(res => {
         list = [];
         res.reverse().map((data, i) => {
@@ -70,6 +77,33 @@ class HomeScreen extends Component {
         this.setState({
           refreshList: !this.state.refreshList
         });
+      });
+    });
+  }
+
+  refreshList() {
+    console.log("Reupdate List");
+    getHistory(this.state.token).then(res => {
+      list = [];
+      res.reverse().map((data, i) => {
+        let status = data.chances == 0 || !data.pinpoint.includes("*");
+        list.push({
+          name: data.pinpoint,
+          avatar_url: <Icon name="gamepad" size={30} color="#84868a" />,
+          badge: {
+            value: status ? "Done" : "On Going",
+            status: status ? "success" : "error"
+          },
+          session: data,
+          subtitle:
+            "Chances: " +
+            data.chances.toString() +
+            "\t Guesses: " +
+            data.guesses
+        });
+      });
+      this.setState({
+        refreshList: !this.state.refreshList
       });
     });
   }
@@ -107,7 +141,6 @@ class HomeScreen extends Component {
                         data: res
                       }
                     });
-                    console.log(res);
                   });
                 }}
               />
@@ -125,11 +158,13 @@ class HomeScreen extends Component {
             <Button
               style={styles.buttonStyle}
               title="New Game"
+              type="outline"
               onPress={() => navigate("Game")}
             />
             <Button
               style={styles.buttonStyle}
               title="Logout"
+              type="outline"
               onPress={() =>
                 signOut(this.state.token).then(res => {
                   if (res.status == "SUCCESS") {
@@ -148,32 +183,6 @@ class HomeScreen extends Component {
         </View>
       );
     }
-  }
-  refreshList() {
-    console.log("Reupdate List");
-    getHistory(this.state.token).then(res => {
-      list = [];
-      res.reverse().map((data, i) => {
-        let status = data.chances == 0 || !data.pinpoint.includes("*");
-        list.push({
-          name: data.pinpoint,
-          avatar_url: <Icon name="gamepad" size={30} color="#84868a" />,
-          badge: {
-            value: status ? "Done" : "On Going",
-            status: status ? "success" : "error"
-          },
-          session: data,
-          subtitle:
-            "Chances: " +
-            data.chances.toString() +
-            "\t Guesses: " +
-            data.guesses
-        });
-      });
-      this.setState({
-        refreshList: !this.state.refreshList
-      });
-    });
   }
 }
 
@@ -212,8 +221,7 @@ const styles = StyleSheet.create({
     alignSelf: "center",
     marginBottom: 5,
     fontSize: 20,
-    fontWeight: "bold",
-    color: "#d4d4d4"
+    fontStyle: "italic"
   }
 });
 
