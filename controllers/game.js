@@ -1,9 +1,9 @@
-import { AsyncStorage } from "react-native";
+const herokuLink = "https://vast-cove-23202.herokuapp.com/";
 
 export const newGame = async (diff_id, token) => {
   console.log("New Game");
   let response = "";
-  await fetch("http://localhost:3000/newgame", {
+  await fetch(herokuLink + "newgame", {
     method: "POST",
     headers: {
       Accept: "application/json",
@@ -24,7 +24,7 @@ export const newGame = async (diff_id, token) => {
 export const submitKey = async (key, token, id) => {
   console.log("Submitkey");
 
-  link = "http://localhost:3000/rngame/" + id;
+  link = herokuLink + "rngame/" + id;
   response = "";
   await fetch(link, {
     method: "POST",
@@ -47,7 +47,7 @@ export const submitKey = async (key, token, id) => {
 export const getHistory = async token => {
   console.log("Getting history list");
   response = "";
-  await fetch("http://localhost:3000/rngame/", {
+  await fetch(herokuLink + "rngame/", {
     method: "GET",
     headers: {
       Accept: "application/json",
@@ -64,7 +64,7 @@ export const getHistory = async token => {
 export const getData = async id => {
   console.log("Getting data");
   response = "";
-  link = "http://localhost:3000/rngame/data/" + id;
+  link = herokuLink + "rngame/data/" + id;
   await fetch(link, {
     method: "GET",
     headers: {}

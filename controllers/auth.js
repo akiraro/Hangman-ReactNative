@@ -1,9 +1,10 @@
+const herokuLink = "https://vast-cove-23202.herokuapp.com/";
+
 export const signIn = async (email, password) => {
   console.log("SignIn");
   let response = "";
 
-  link = "https://vast-cove-23202.herokuapp.com/auth/login";
-  await fetch("http://localhost:3000/auth/login", {
+  await fetch(herokuLink + "auth/login", {
     method: "POST",
     headers: {
       Accept: "application/json",
@@ -27,7 +28,7 @@ export const signUp = async (email, password) => {
 
   let response = "";
 
-  await fetch("http://localhost:3000/auth/signup", {
+  await fetch(herokuLink + "auth/signup", {
     method: "POST",
     headers: {
       Accept: "application/json",
@@ -51,7 +52,7 @@ export const signOut = async token => {
   console.log("Sign Out");
 
   let response = "";
-  await fetch("http://localhost:3000/auth/logout", {
+  await fetch(herokuLink + "auth/logout", {
     method: "DELETE",
     headers: {
       Accept: "application/json",
@@ -70,7 +71,7 @@ export const signOut = async token => {
 export const getUser = async token => {
   console.log("Get User");
   let response = "";
-  await fetch("http://localhost:3000/auth/getUser", {
+  await fetch(herokuLink + "auth/getUser", {
     method: "GET",
     headers: {
       Accept: "application/json",
